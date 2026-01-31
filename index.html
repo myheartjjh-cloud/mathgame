@@ -4,104 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>하늘바다 숫자놀이</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Nanum+Square+Round:wght@400;700&display=swap');
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Nanum+Square+Round:wght@400;700&display=swap');
 
-        :root {
-            --cloud-pink: #E0F7FA;
-            --main-pink: #81D4FA;
-            --deep-pink: #0288D1;
-            --sky-blue: #E1F5FE;
-            --white: #FFFFFF;
-        }
+    :root {
+        --cloud-pink: #E0F7FA;
+        --main-pink: #81D4FA;
+        --deep-pink: #0288D1;
+        --sky-blue: #E1F5FE;
+        --white: #FFFFFF;
+    }
 
-        body {
-            font-family: 'NanumSquareRound', sans-serif;
-            background: linear-gradient(135deg, #B2EBF2 0%, #E1F5FE 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
+    body {
+        font-family: 'NanumSquareRound', sans-serif;
+        background: linear-gradient(135deg, #B2EBF2 0%, #E1F5FE 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* 높이를 100vh가 아니라 100%로 설정하여 잘림 방지 */
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+    }
 
-        #phone-container {
-            background: var(--white);
-            width: 375px;
-            height: 667px;
-            border-radius: 50px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(2, 136, 209, 0.3);
-            border: 10px solid white;
-        }
+    #phone-container {
+        background: var(--white);
+        /* 고정 크기를 없애고 화면에 맞춤 */
+        width: 100%;
+        max-width: 500px; /* 태블릿 대비 */
+        height: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: none; /* 전체화면일 땐 그림자 제거가 깔끔함 */
+        border: none; /* 테두리 제거 */
+    }
 
-        .view {
-            display: none;
-            flex: 1;
-            padding: 15px 20px;
-            text-align: center;
-            flex-direction: column;
-            align-items: center;
-            background: radial-gradient(circle at top left, #F0FBFF 0%, #FFFFFF 100%);
-        }
+    .view {
+        display: none;
+        flex: 1;
+        padding: 20px;
+        text-align: center;
+        flex-direction: column;
+        align-items: center;
+        background: radial-gradient(circle at top left, #F0FBFF 0%, #FFFFFF 100%);
+        /* 내용이 길어질 경우를 대비해 스크롤 허용 */
+        overflow-y: auto;
+    }
 
-        .view.active { display: flex; }
+    .view.active { display: flex; }
 
-        h2 { 
-            color: var(--deep-pink); 
-            margin-top: 10px; 
-            font-family: 'Nanum Pen Script', cursive; 
-            font-size: 2.3rem;
-            text-shadow: 2px 2px 0px #E1F5FE;
-        }
+    /* 글자 크기를 화면 너비에 맞게 조절 (반응형) */
+    h2 { 
+        color: var(--deep-pink); 
+        margin-top: 10px; 
+        font-family: 'Nanum Pen Script', cursive; 
+        font-size: 8vw; /* 화면 너비에 비례 */
+        max-size: 2.5rem;
+    }
 
-        .card {
-            background: var(--white);
-            width: 92%;
-            padding: 14px 15px;
-            border-radius: 25px;
-            margin-bottom: 8px;
-            border: 3px solid var(--cloud-pink);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 12px rgba(129, 212, 250, 0.2);
-            position: relative;
-        }
-        
-        .card::after { 
-            content: ''; position: absolute; top: -5px; right: 20px; width: 30px; height: 15px;
-            background: white; border-radius: 20px; opacity: 0.8;
-        }
+    .q-text { 
+        font-size: 15vw; /* 화면 너비에 비례 */
+        font-weight: bold; 
+        color: #37474F; 
+        margin: 20px 0; 
+    }
 
-        .card:hover { transform: translateY(-3px); }
-        .card h3 { margin: 0; color: #01579B; font-size: 1.1rem; }
-        .card p { margin: 2px 0 0; font-size: 0.85rem; color: #4FC3F7; }
+    .ans-input { 
+        width: 70%; 
+        font-size: 2rem; 
+        padding: 10px;
+    }
 
-        .progress-bar-bg { width: 100%; height: 14px; background: #E0F2F1; border-radius: 20px; margin: 15px 0; border: 2px solid white; }
-        #progress-fill { width: 0%; height: 100%; background: linear-gradient(to right, #81D4FA, #0288D1); border-radius: 20px; transition: 0.5s; }
-        
-        .q-text { font-size: 3.5rem; font-weight: bold; color: #37474F; margin: 25px 0; text-shadow: 3px 3px 0px var(--cloud-pink); }
-        .ans-input { width: 60%; font-size: 2.5rem; border: 5px solid var(--main-pink); border-radius: 25px; text-align: center; outline: none; background: #F4FDFF; color: var(--deep-pink); }
-        
-        #wrong-msg { color: var(--deep-pink); margin-top: 10px; font-weight: bold; visibility: hidden; }
+    /* 계산기 버튼 크기 최적화 */
+    .calc-grid { 
+        display: grid; 
+        grid-template-columns: repeat(4, 1fr); 
+        gap: 8px; 
+        width: 100%;
+        padding-bottom: 20px;
+    }
+    
+    .calc-btn {
+        aspect-ratio: 1 / 1; /* 버튼을 정사각형으로 유지 */
+        font-size: 1.5rem;
+    }
 
-        #calc-display { width: 100%; height: 70px; background: #F0F9FF; border-radius: 20px; font-size: 1.8rem; display: flex; align-items: center; justify-content: flex-end; padding: 0 20px; box-sizing: border-box; margin-bottom: 15px; color: #0277BD; border: 3px solid var(--cloud-pink); }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; }
-        .calc-btn { padding: 12px 0; font-size: 1.2rem; border-radius: 18px; border: none; background: white; border-bottom: 4px solid #E1F5FE; cursor: pointer; font-weight: bold; color: #546E7A; }
-        .calc-btn.op { background: var(--cloud-pink); color: var(--deep-pink); border-bottom-color: #B3E5FC; }
-
-        .tab-bar { height: 75px; background: #fff; display: flex; border-top: 2px solid #E1F5FE; padding-bottom: 5px; }
-        .tab-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; color: #B3E5FC; }
-        .tab-item.active { color: var(--deep-pink); }
-        .tab-icon { font-size: 1.5rem; margin-bottom: 2px; }
-
-        #feedback-pop { position: absolute; top: 40%; font-size: 6rem; display: none; z-index: 999; animation: pop 0.8s ease forwards; }
-        @keyframes pop { 0%{transform:scale(0) rotate(-20deg); opacity:0} 50%{transform:scale(1.2) rotate(10deg); opacity:1} 100%{transform:scale(1) rotate(0deg); opacity:0} }
-    </style>
+    /* 하단 탭 바가 화면 맨 아래에 붙도록 설정 */
+    .tab-bar { 
+        min-height: 70px; 
+        background: #fff; 
+        display: flex; 
+        border-top: 2px solid #E1F5FE; 
+        padding-bottom: env(safe-area-inset-bottom); /* 최신폰 하단바 대응 */
+    }
+</style>
 </head>
 <body>
 
@@ -323,4 +321,5 @@
     function uC() { document.getElementById('calc-display').innerText = cExpr || '0'; }
 </script>
 </body>
+
 </html>
