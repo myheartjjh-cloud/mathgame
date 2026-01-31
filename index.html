@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>하늘바다 숫자놀이</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Nanum+Square+Round:wght@400;700&display=swap');
@@ -15,91 +15,99 @@
             --white: #FFFFFF;
         }
 
+        /* 배경 전체 설정 */
         body {
             font-family: 'NanumSquareRound', sans-serif;
             background: linear-gradient(135deg, #B2EBF2 0%, #E1F5FE 100%);
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            overflow: hidden;
+            width: 100vw;
+            overflow: hidden; /* 스크롤 방지 */
         }
 
+        /* 컨테이너: 고정 크기를 없애고 화면 비율에 맞춤 */
         #phone-container {
             background: var(--white);
-            width: 375px;
-            height: 667px;
-            border-radius: 50px;
-            position: relative;
+            width: 100%;
+            max-width: 450px; /* 큰 폰 대비 */
+            height: 100%;
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(2, 136, 209, 0.3);
-            border: 10px solid white;
+            position: relative;
+            box-sizing: border-box;
         }
 
+        /* 각 화면(View) 설정 */
         .view {
             display: none;
             flex: 1;
-            padding: 15px 20px;
+            padding: 2vh 5vw; /* 화면 높이에 따른 유동적인 여백 */
             text-align: center;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* 수직 중앙 정렬 */
             background: radial-gradient(circle at top left, #F0FBFF 0%, #FFFFFF 100%);
+            overflow-y: auto;
         }
 
         .view.active { display: flex; }
 
+        /* 제목 크기 조정 */
         h2 { 
             color: var(--deep-pink); 
-            margin-top: 10px; 
+            margin: 10px 0;
             font-family: 'Nanum Pen Script', cursive; 
-            font-size: 2.3rem;
+            font-size: 2.5rem;
             text-shadow: 2px 2px 0px #E1F5FE;
         }
 
+        /* 카드 버튼 간격 줄임 */
         .card {
             background: var(--white);
-            width: 92%;
-            padding: 14px 15px;
-            border-radius: 25px;
-            margin-bottom: 8px;
+            width: 95%;
+            padding: 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
             border: 3px solid var(--cloud-pink);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 12px rgba(129, 212, 250, 0.2);
-            position: relative;
+            box-shadow: 0 4px 10px rgba(129, 212, 250, 0.2);
         }
         
-        .card::after { 
-            content: ''; position: absolute; top: -5px; right: 20px; width: 30px; height: 15px;
-            background: white; border-radius: 20px; opacity: 0.8;
-        }
-
-        .card:hover { transform: translateY(-3px); }
         .card h3 { margin: 0; color: #01579B; font-size: 1.1rem; }
         .card p { margin: 2px 0 0; font-size: 0.85rem; color: #4FC3F7; }
 
-        .progress-bar-bg { width: 100%; height: 14px; background: #E0F2F1; border-radius: 20px; margin: 15px 0; border: 2px solid white; }
-        #progress-fill { width: 0%; height: 100%; background: linear-gradient(to right, #81D4FA, #0288D1); border-radius: 20px; transition: 0.5s; }
+        /* 진행바 */
+        .progress-bar-bg { width: 100%; height: 10px; background: #E0F2F1; border-radius: 10px; margin-bottom: 10px; }
+        #progress-fill { width: 0%; height: 100%; background: linear-gradient(to right, #81D4FA, #0288D1); border-radius: 10px; transition: 0.5s; }
         
-        .q-text { font-size: 3.5rem; font-weight: bold; color: #37474F; margin: 25px 0; text-shadow: 3px 3px 0px var(--cloud-pink); }
-        .ans-input { width: 60%; font-size: 2.5rem; border: 5px solid var(--main-pink); border-radius: 25px; text-align: center; outline: none; background: #F4FDFF; color: var(--deep-pink); }
+        /* 문제 텍스트 크기: 짤리지 않게 살짝 줄임 */
+        .q-text { font-size: 4rem; font-weight: bold; color: #37474F; margin: 15px 0; }
+        .ans-input { width: 60%; font-size: 2.5rem; border: 4px solid var(--main-pink); border-radius: 20px; text-align: center; outline: none; background: #F4FDFF; }
         
-        #wrong-msg { color: var(--deep-pink); margin-top: 10px; font-weight: bold; visibility: hidden; }
+        /* 계산기 영역: 높이가 부족할 때를 대비해 크기 최적화 */
+        #calc-display { width: 100%; height: 60px; background: #F0F9FF; border-radius: 15px; font-size: 1.5rem; display: flex; align-items: center; justify-content: flex-end; padding: 0 15px; margin-bottom: 10px; border: 2px solid var(--cloud-pink); box-sizing: border-box;}
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; flex: 1; padding-bottom: 10px;}
+        .calc-btn { border-radius: 15px; border: none; background: white; border-bottom: 3px solid #E1F5FE; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .calc-btn.op { background: var(--cloud-pink); color: var(--deep-pink); }
 
-        #calc-display { width: 100%; height: 70px; background: #F0F9FF; border-radius: 20px; font-size: 1.8rem; display: flex; align-items: center; justify-content: flex-end; padding: 0 20px; box-sizing: border-box; margin-bottom: 15px; color: #0277BD; border: 3px solid var(--cloud-pink); }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; }
-        .calc-btn { padding: 12px 0; font-size: 1.2rem; border-radius: 18px; border: none; background: white; border-bottom: 4px solid #E1F5FE; cursor: pointer; font-weight: bold; color: #546E7A; }
-        .calc-btn.op { background: var(--cloud-pink); color: var(--deep-pink); border-bottom-color: #B3E5FC; }
+        /* 하단 탭 바: 높이 고정 및 하단 여백 대응 */
+        .tab-bar { 
+            height: 70px; 
+            min-height: 70px;
+            background: #fff; 
+            display: flex; 
+            border-top: 2px solid #E1F5FE; 
+            padding-bottom: env(safe-area-inset-bottom); /* 아이폰 등 하단바 영역 보호 */
+        }
+        .tab-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 0.8rem; color: #B3E5FC; }
+        .tab-item.active { color: var(--deep-pink); font-weight: bold; }
+        .tab-icon { font-size: 1.4rem; }
 
-        .tab-bar { height: 75px; background: #fff; display: flex; border-top: 2px solid #E1F5FE; padding-bottom: 5px; }
-        .tab-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; color: #B3E5FC; }
-        .tab-item.active { color: var(--deep-pink); }
-        .tab-icon { font-size: 1.5rem; margin-bottom: 2px; }
-
-        #feedback-pop { position: absolute; top: 40%; font-size: 6rem; display: none; z-index: 999; animation: pop 0.8s ease forwards; }
+        #feedback-pop { position: absolute; top: 35%; font-size: 6rem; display: none; z-index: 999; animation: pop 0.8s ease forwards; }
         @keyframes pop { 0%{transform:scale(0) rotate(-20deg); opacity:0} 50%{transform:scale(1.2) rotate(10deg); opacity:1} 100%{transform:scale(1) rotate(0deg); opacity:0} }
     </style>
 </head>
@@ -110,7 +118,7 @@
 
     <div id="view-home" class="view active">
         <h2>🐳 소현이 숫자놀이 🐬</h2>
-        <div id="op-list" style="width:100%; margin-top: 5px;">
+        <div id="op-list" style="width:100%;">
             <button class="card" onclick="showLevels('+')"><h3>🌊 보글보글 덧셈 (+)</h3><p>물방울이 모여 커져요</p></button>
             <button class="card" style="border-color:#C8E6C9" onclick="showLevels('-')"><h3>🐚 슝슝 뺄셈 (-)</h3><p>조개가 하나씩 사라져요</p></button>
             <button class="card" style="border-color:#FFE0B2" onclick="showLevels('*')"><h3>🦀 쑥쑥 곱셈 (×)</h3><p>게들이 옆으로 줄을 서요</p></button>
@@ -118,36 +126,36 @@
         </div>
         
         <div id="level-list" style="display:none; width:100%">
-            <h3 style="color:var(--deep-pink); margin-bottom: 15px;">어떤 바다로 갈까요?</h3>
+            <h3 style="color:var(--deep-pink); margin-bottom: 10px;">어떤 바다로 갈까요?</h3>
             <button class="card" onclick="startGame(1)"><h3>🫧 얕은 바다</h3><p id="desc1"></p></button>
             <button class="card" onclick="startGame(2)"><h3>🌊 파도 바다</h3><p id="desc2"></p></button>
             <button class="card" onclick="startGame(3)"><h3>🔱 깊은 바다</h3><p id="desc3"></p></button>
-            <button onclick="backToOp()" style="border:none; background:none; color:#4FC3F7; text-decoration:underline; margin-top:10px; cursor:pointer;">뒤로가기</button>
+            <button onclick="backToOp()" style="border:none; background:none; color:#4FC3F7; text-decoration:underline; cursor:pointer;">뒤로가기</button>
         </div>
     </div>
 
     <div id="view-game" class="view">
         <div class="progress-bar-bg"><div id="progress-fill"></div></div>
-        <div style="font-weight:bold; color:#4FC3F7; font-size: 1rem;"><span id="cur-count">1</span> / 10 문제</div>
+        <div style="font-weight:bold; color:#4FC3F7; margin-bottom:10px;"><span id="cur-count">1</span> / 10 문제</div>
         <div class="q-text" id="q-display">0 + 0</div>
         <input type="number" id="ans-input" class="ans-input" inputmode="numeric" onkeyup="handleInput()">
-        <div id="wrong-msg">힝~ㅠ 다시 한번 해볼까? 🤿</div>
+        <div id="wrong-msg" style="margin-top:10px; color:var(--deep-pink); font-weight:bold; visibility:hidden;">다시 한번 해볼까? 🤿</div>
     </div>
 
     <div id="view-result" class="view">
-        <h2 style="font-size: 2.2rem;" id="result-title">지혜의 보석 획득!</h2>
-        <div id="reward-icon" style="font-size: 5.5rem; margin: 15px;">💎</div>
-        <div style="background: #E1F5FE; padding: 15px; border-radius: 20px; width: 90%; margin-bottom: 15px;">
-            <p id="praise-msg" style="font-weight:bold; color:#01579B; font-size: 1.1rem; margin: 0;"></p>
+        <h2 id="result-title">지혜의 보석 획득!</h2>
+        <div id="reward-icon" style="font-size: 5rem; margin: 10px;">💎</div>
+        <div style="background: #E1F5FE; padding: 15px; border-radius: 20px; width: 85%; margin-bottom: 15px;">
+            <p id="praise-msg" style="font-weight:bold; color:#01579B; margin: 0;"></p>
             <p style="color:#0288D1; margin-top: 5px; font-size: 0.9rem;">
-                숫자 실력이 <span id="score-text" style="font-weight:bold; font-size: 1.3rem;">0</span>칸 더 똑똑해졌어요!
+                실력이 <span id="score-text" style="font-weight:bold; font-size: 1.2rem;">0</span>칸 더 똑똑해졌어요!
             </p>
         </div>
-        <button class="card" onclick="switchView('home')" style="background:var(--main-pink); border:none; color:white;"><h3>한 번 더 탐험하기</h3></button>
+        <button class="card" onclick="switchView('home')" style="background:var(--main-pink); border:none; color:white;"><h3>한 번 더 하기</h3></button>
     </div>
 
     <div id="view-calc" class="view">
-        <h2 style="font-size: 2rem;">☁️ 구름 계산기 ☁️</h2>
+        <h2>☁️ 구름 계산기 ☁️</h2>
         <div id="calc-display">0</div>
         <div class="calc-grid">
             <button class="calc-btn" onclick="cIn('7')">7</button>
@@ -183,8 +191,6 @@
     let curOp = '', curLv = 1, curAns = 0;
     let probIdx = 0, score = 0, cExpr = '';
 
-    // APK/오프라인용 소리 설정 (파일이 폴더 내에 있어야 함)
-    // 없을 경우 에러로 앱이 멈추지 않도록 play() 시에 catch 처리 추가
     const soundCorrect = new Audio('correct.mp3');
     const soundWrong = new Audio('wrong.mp3');
 
@@ -276,7 +282,7 @@
         if(v.length >= curAns.toString().length) {
             if(parseInt(v) === curAns) {
                 score++;
-                soundCorrect.play().catch(() => {}); // 소리 파일 없어도 무시
+                soundCorrect.play().catch(() => {});
                 popEffect();
                 setTimeout(nextProb, 600);
             } else {
@@ -297,7 +303,6 @@
     function endMove() {
         switchView('result');
         document.getElementById('score-text').innerText = score;
-        
         const icon = document.getElementById('reward-icon');
         const msg = document.getElementById('praise-msg');
         const title = document.getElementById('result-title');
