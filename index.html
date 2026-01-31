@@ -18,115 +18,130 @@
         body {
             font-family: 'NanumSquareRound', sans-serif;
             background: linear-gradient(135deg, #B2EBF2 0%, #E1F5FE 100%);
-            margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center; /* 시나모롤폰의 작은 화면 대응 */
+            align-items: center;
             height: 100vh;
+            margin: 0;
             overflow: hidden;
         }
 
         #phone-container {
             background: var(--white);
-            width: 100%;
-            max-width: 400px;
-            /* 중요: 시나모롤폰의 짧은 화면을 위해 전체 높이의 92%만 사용 */
-            height: 92%; 
+            width: 95%; /* 가로폭 유동적 조정 */
+            max-width: 375px;
+            height: 90%; /* 세로 길이를 화면의 90%로 제한하여 하단을 올림 */
+            max-height: 667px;
+            border-radius: 40px;
+            position: relative;
             display: flex;
             flex-direction: column;
-            position: relative;
-            box-sizing: border-box;
-            /* 폰 화면 하단 끝에 붙지 않게 살짝 띄움 */
-            margin-bottom: 20px; 
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(2, 136, 209, 0.3);
+            border: 8px solid white;
         }
 
         .view {
             display: none;
             flex: 1;
-            padding: 10px 15px;
+            padding: 10px 20px;
             text-align: center;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: center; /* 내용 중앙 정렬 */
             background: radial-gradient(circle at top left, #F0FBFF 0%, #FFFFFF 100%);
-            overflow-y: auto;
+            overflow-y: auto; /* 내용이 많으면 내부 스크롤 */
         }
 
         .view.active { display: flex; }
 
-        /* 하단 탭 바: 높이를 살짝 줄이고 위로 올림 */
-        .tab-bar { 
-            height: 65px; 
-            min-height: 65px;
-            background: #fff; 
-            display: flex; 
-            border-top: 2px solid #E1F5FE;
-            border-radius: 0 0 20px 20px;
+        h2 { 
+            color: var(--deep-pink); 
+            margin: 10px 0; 
+            font-family: 'Nanum Pen Script', cursive; 
+            font-size: 2.1rem;
+            text-shadow: 2px 2px 0px #E1F5FE;
         }
 
-        .tab-item { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            color: #B3E5FC; 
-            font-size: 0.75rem;
+        .card {
+            background: var(--white);
+            width: 92%;
+            padding: 12px 15px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            border: 3px solid var(--cloud-pink);
+            cursor: pointer;
+            box-shadow: 0 5px 12px rgba(129, 212, 250, 0.2);
+            position: relative;
         }
-        .tab-item.active { color: var(--deep-pink); font-weight: bold; }
-        .tab-icon { font-size: 1.3rem; margin-bottom: 2px; }
 
-        /* 시나모롤폰에서 짤리지 않게 글자 크기 최적화 */
-        h2 { font-size: 1.8rem; color: var(--deep-pink); margin: 5px 0; font-family: 'Nanum Pen Script', cursive; }
-        .card { width: 90%; padding: 8px; margin-bottom: 6px; border-radius: 15px; border: 2px solid var(--cloud-pink); background: white; }
-        .card h3 { font-size: 1rem; margin: 0; }
-        .card p { font-size: 0.75rem; margin: 0; }
-        .q-text { font-size: 3rem; font-weight: bold; margin: 8px 0; }
-        .ans-input { width: 50%; font-size: 2rem; border: 3px solid var(--main-pink); border-radius: 12px; text-align: center; }
+        .card h3 { margin: 0; color: #01579B; font-size: 1.05rem; }
+        .card p { margin: 2px 0 0; font-size: 0.8rem; color: #4FC3F7; }
 
-        /* 계산기 버튼 간격 좁힘 */
-        #calc-display { width: 100%; height: 40px; background: #F0F9FF; border-radius: 10px; font-size: 1.2rem; display: flex; align-items: center; justify-content: flex-end; padding: 0 10px; margin-bottom: 8px; border: 1px solid var(--cloud-pink); box-sizing: border-box;}
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; width: 100%; flex: 1; }
-        .calc-btn { border-radius: 10px; border: none; background: white; border-bottom: 2px solid #E1F5FE; font-size: 1rem; }
+        .progress-bar-bg { width: 100%; height: 12px; background: #E0F2F1; border-radius: 20px; margin: 10px 0; border: 2px solid white; }
+        #progress-fill { width: 0%; height: 100%; background: linear-gradient(to right, #81D4FA, #0288D1); border-radius: 20px; transition: 0.5s; }
+        
+        .q-text { font-size: 3.2rem; font-weight: bold; color: #37474F; margin: 15px 0; text-shadow: 2px 2px 0px var(--cloud-pink); }
+        .ans-input { width: 60%; font-size: 2.2rem; border: 4px solid var(--main-pink); border-radius: 20px; text-align: center; outline: none; background: #F4FDFF; color: var(--deep-pink); }
+        
+        #wrong-msg { color: var(--deep-pink); margin-top: 5px; font-weight: bold; font-size: 0.9rem; visibility: hidden; }
+
+        #calc-display { width: 100%; height: 60px; background: #F0F9FF; border-radius: 15px; font-size: 1.6rem; display: flex; align-items: center; justify-content: flex-end; padding: 0 20px; box-sizing: border-box; margin-bottom: 10px; color: #0277BD; border: 2px solid var(--cloud-pink); }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; }
+        .calc-btn { padding: 10px 0; font-size: 1.1rem; border-radius: 15px; border: none; background: white; border-bottom: 3px solid #E1F5FE; cursor: pointer; font-weight: bold; color: #546E7A; }
+        .calc-btn.op { background: var(--cloud-pink); color: var(--deep-pink); }
+
+        /* 하단 탭바 고정 및 높이 조정 */
+        .tab-bar { height: 70px; background: #fff; display: flex; border-top: 2px solid #E1F5FE; position: relative; width: 100%; }
+        .tab-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; color: #B3E5FC; }
+        .tab-item.active { color: var(--deep-pink); }
+        .tab-icon { font-size: 1.4rem; margin-bottom: 2px; }
+
+        #feedback-pop { position: absolute; top: 40%; font-size: 6rem; display: none; z-index: 999; animation: pop 0.8s ease forwards; }
+        @keyframes pop { 0%{transform:scale(0) rotate(-20deg); opacity:0} 50%{transform:scale(1.2) rotate(10deg); opacity:1} 100%{transform:scale(1) rotate(0deg); opacity:0} }
     </style>
 </head>
 <body>
 
 <div id="phone-container">
+    <div id="feedback-pop">🫧</div>
+
     <div id="view-home" class="view active">
         <h2>🐳 소현이 숫자놀이 🐬</h2>
         <div id="op-list" style="width:100%;">
-            <button class="card" onclick="showLevels('+')"><h3>🌊 덧셈 (+)</h3></button>
-            <button class="card" style="border-color:#C8E6C9" onclick="showLevels('-')"><h3>🐚 뺄셈 (-)</h3></button>
-            <button class="card" style="border-color:#FFE0B2" onclick="showLevels('*')"><h3>🦀 곱셈 (×)</h3></button>
-            <button class="card" style="border-color:#D1C4E9" onclick="showLevels('/')"><h3>🐳 나눗셈 (÷)</h3></button>
+            <button class="card" onclick="showLevels('+')"><h3>🌊 보글보글 덧셈 (+)</h3><p>물방울이 모여 커져요</p></button>
+            <button class="card" style="border-color:#C8E6C9" onclick="showLevels('-')"><h3>🐚 슝슝 뺄셈 (-)</h3></button>
+            <button class="card" style="border-color:#FFE0B2" onclick="showLevels('*')"><h3>🦀 쑥쑥 곱셈 (×)</h3></button>
+            <button class="card" style="border-color:#D1C4E9" onclick="showLevels('/')"><h3>🐳 톡톡 나눗셈 (÷)</h3></button>
         </div>
         <div id="level-list" style="display:none; width:100%">
+            <h3 style="color:var(--deep-pink); margin-bottom: 10px;">어떤 바다로 갈까요?</h3>
             <button class="card" onclick="startGame(1)"><h3>🫧 얕은 바다</h3><p id="desc1"></p></button>
             <button class="card" onclick="startGame(2)"><h3>🌊 파도 바다</h3><p id="desc2"></p></button>
             <button class="card" onclick="startGame(3)"><h3>🔱 깊은 바다</h3><p id="desc3"></p></button>
-            <button onclick="backToOp()" style="font-size:0.8rem; color:#4FC3F7; border:none; background:none; text-decoration:underline;">뒤로가기</button>
+            <button onclick="backToOp()" style="border:none; background:none; color:#4FC3F7; text-decoration:underline; margin-top:5px; cursor:pointer;">뒤로가기</button>
         </div>
     </div>
 
     <div id="view-game" class="view">
-        <div style="width:100%; height:6px; background:#E0F2F1; border-radius:10px; margin-bottom:10px;"><div id="progress-fill" style="width:0%; height:100%; background:var(--main-pink); border-radius:10px;"></div></div>
+        <div class="progress-bar-bg"><div id="progress-fill"></div></div>
+        <div style="font-weight:bold; color:#4FC3F7; font-size: 0.9rem;"><span id="cur-count">1</span> / 10 문제</div>
         <div class="q-text" id="q-display">0 + 0</div>
         <input type="number" id="ans-input" class="ans-input" inputmode="numeric" onkeyup="handleInput()">
+        <div id="wrong-msg">다시 한번 해볼까? 🤿</div>
     </div>
 
     <div id="view-result" class="view">
-        <h2>보석 획득!</h2>
-        <div id="reward-icon" style="font-size: 3rem; margin: 10px;">💎</div>
-        <p id="praise-msg" style="font-weight:bold; font-size:0.9rem; color:#01579B;"></p>
-        <button class="card" onclick="switchView('home')" style="background:var(--main-pink); color:white; border:none;"><h3>다시 하기</h3></button>
+        <h2 style="font-size: 2rem;" id="result-title">지혜의 보석 획득!</h2>
+        <div id="reward-icon" style="font-size: 5rem; margin: 10px;">💎</div>
+        <div style="background: #E1F5FE; padding: 15px; border-radius: 20px; width: 90%; margin-bottom: 10px;">
+            <p id="praise-msg" style="font-weight:bold; color:#01579B; font-size: 1rem; margin: 0;"></p>
+        </div>
+        <button class="card" onclick="switchView('home')" style="background:var(--main-pink); border:none; color:white;"><h3>한 번 더 탐험하기</h3></button>
     </div>
 
     <div id="view-calc" class="view">
-        <h2 style="font-size: 1.5rem;">☁️ 구름 계산기</h2>
+        <h2 style="font-size: 1.8rem;">☁️ 구름 계산기</h2>
         <div id="calc-display">0</div>
         <div class="calc-grid">
             <button class="calc-btn" onclick="cIn('7')">7</button><button class="calc-btn" onclick="cIn('8')">8</button><button class="calc-btn" onclick="cIn('9')">9</button><button class="calc-btn op" onclick="cIn('/')">÷</button>
@@ -141,7 +156,7 @@
             <span class="tab-icon">🏝️</span><span>공부방</span>
         </div>
         <div class="tab-item" id="tab-calc" onclick="switchTab('calc')">
-            <span class="tab-icon">☁️</span><span>계산기</span>
+            <span class="tab-icon">☁️</span><span>구름계산기</span>
         </div>
     </div>
 </div>
@@ -154,21 +169,48 @@
     function switchView(viewId) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + viewId).classList.add('active');
+        if(viewId === 'home') {
+            document.getElementById('op-list').style.display = 'block';
+            document.getElementById('level-list').style.display = 'none';
+        }
     }
+
     function switchTab(type) {
-        if(type === 'home') { switchView('home'); document.getElementById('tab-home').classList.add('active'); document.getElementById('tab-calc').classList.remove('active'); }
-        else { switchView('calc'); document.getElementById('tab-home').classList.remove('active'); document.getElementById('tab-calc').classList.add('active'); }
+        if(type === 'home') {
+            switchView('home');
+            document.getElementById('tab-home').classList.add('active');
+            document.getElementById('tab-calc').classList.remove('active');
+        } else {
+            switchView('calc');
+            document.getElementById('tab-home').classList.remove('active');
+            document.getElementById('tab-calc').classList.add('active');
+        }
     }
+
     function showLevels(op) {
-        curOp = op; document.getElementById('op-list').style.display = 'none'; document.getElementById('level-list').style.display = 'block';
-        const d = {'+':['1자리','2자리+1','2자리+2'],'-':['1자리','2자리-1','2자리-2'],'*':['2~5단','6~9단','랜덤'],'/':['기초','보통','심화']};
+        curOp = op;
+        document.getElementById('op-list').style.display = 'none';
+        document.getElementById('level-list').style.display = 'block';
+        const d = {'+':['1자리 + 1자리','2자리 + 1자리','2자리 + 2자리'],'-':['1자리 - 1자리','2자리 - 1자리','2자리 - 2자리'],'*':['2~5단 기초','6~9단 보통','랜덤 구구단'],'/':['기초 나누기','보통 나누기','심화 나누기']};
         for(let i=1; i<=3; i++) document.getElementById('desc'+i).innerText = d[op][i-1];
     }
-    function backToOp() { document.getElementById('op-list').style.display = 'block'; document.getElementById('level-list').style.display = 'none'; }
-    function startGame(lv) { curLv = lv; probIdx = 0; score = 0; switchView('game'); nextProb(); }
+
+    function backToOp() {
+        document.getElementById('op-list').style.display = 'block';
+        document.getElementById('level-list').style.display = 'none';
+    }
+
+    function startGame(lv) {
+        curLv = lv; probIdx = 0; score = 0;
+        switchView('game');
+        nextProb();
+    }
+
     function nextProb() {
-        probIdx++; if(probIdx > 10) return endMove();
+        probIdx++;
+        if(probIdx > 10) return endMove();
         document.getElementById('progress-fill').style.width = (probIdx * 10) + '%';
+        document.getElementById('wrong-msg').style.visibility = 'hidden';
         let n1, n2;
         while(true) {
             if(curOp==='+'){ if(curLv==1){n1=r(1,9); n2=r(1,9);} else if(curLv==2){n1=r(10,99); n2=r(1,9);} else {n1=r(10,99); n2=r(10,99);} curAns = n1 + n2; }
@@ -179,23 +221,44 @@
         }
         const s = {'+':'+','-':'-','*':'×','/':'÷'}[curOp];
         document.getElementById('q-display').innerText = `${n1} ${s} ${n2}`;
-        document.getElementById('ans-input').value = ''; document.getElementById('ans-input').focus();
+        document.getElementById('ans-input').value = '';
+        document.getElementById('ans-input').focus();
     }
+
     function r(a, b) { return Math.floor(Math.random()*(b-a+1))+a; }
+
     function handleInput() {
         const v = document.getElementById('ans-input').value;
         if(v.length >= curAns.toString().length) {
-            if(parseInt(v) === curAns) { score++; soundCorrect.play().catch(()=>{}); setTimeout(nextProb, 600); }
-            else { soundWrong.play().catch(()=>{}); }
+            if(parseInt(v) === curAns) {
+                score++;
+                soundCorrect.play().catch(() => {});
+                popEffect();
+                setTimeout(nextProb, 600);
+            } else {
+                soundWrong.play().catch(() => {});
+                document.getElementById('wrong-msg').style.visibility = 'visible';
+            }
         }
     }
+
+    function popEffect() {
+        const p = document.getElementById('feedback-pop');
+        const emojis = ['🫧','🌊','🐬','🐚','🐳','✨'];
+        p.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+        p.style.display = 'block';
+        setTimeout(() => { p.style.display = 'none'; }, 800);
+    }
+
     function endMove() {
         switchView('result');
+        document.getElementById('score-text').innerText = score;
         const msg = document.getElementById('praise-msg');
-        if(score === 10) msg.innerText = "소현아 최고! 🔱";
-        else if(score >= 7) msg.innerText = "정말 잘했어! ✨";
-        else msg.innerText = "다시 해보자! 🌊";
+        if(score === 10) msg.innerText = "대단해 소현아! 최고야! 🔱";
+        else if(score >= 7) msg.innerText = "우와! 정말 똑똑해졌어! ✨";
+        else msg.innerText = "화이팅! 다시 해보자! 🌊";
     }
+
     function cIn(v) { cExpr += v; uC(); }
     function cClear() { cExpr = ''; uC(); }
     function cSolve() { try { cExpr = eval(cExpr.replace(/×/g,'*').replace(/÷/g,'/')).toString(); } catch { cExpr = 'Error'; } uC(); }
