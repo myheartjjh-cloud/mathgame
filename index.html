@@ -99,6 +99,9 @@
         .tab-item.active { color: var(--deep-pink); }
         .tab-icon { font-size: 1.5rem; margin-bottom: 2px; }
 
+        .profile-input { width: 80%; padding: 15px; font-size: 1.2rem; border: 3px solid var(--cloud-pink); border-radius: 20px; text-align: center; margin-bottom: 20px; outline: none; }
+        .save-btn { background: var(--deep-pink); color: white; border: none; padding: 15px 40px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; font-weight: bold; }
+
         #feedback-pop { position: absolute; top: 40%; font-size: 6rem; display: none; z-index: 999; animation: pop 0.8s ease forwards; }
         @keyframes pop { 0%{transform:scale(0) rotate(-20deg); opacity:0} 50%{transform:scale(1.2) rotate(10deg); opacity:1} 100%{transform:scale(1) rotate(0deg); opacity:0} }
     </style>
@@ -109,7 +112,7 @@
     <div id="feedback-pop">🫧</div>
 
     <div id="view-home" class="view active">
-        <h2>🐳 소현이의 숫자놀이 🐬</h2>
+        <h2 id="home-title">🐳 소현이의 숫자놀이 🐬</h2>
         <div id="op-list" style="width:100%; margin-top: 5px;">
             <button class="card" onclick="showLevels('+')"><h3>🌊 보글보글 덧셈 (+)</h3><p>물방울이 모여 커져요</p></button>
             <button class="card" style="border-color:#C8E6C9" onclick="showLevels('-')"><h3>🐚 슝슝 뺄셈 (-)</h3><p>조개가 하나씩 사라져요</p></button>
@@ -169,6 +172,16 @@
         </div>
     </div>
 
+    <div id="view-profile" class="view">
+        <h2 style="font-size: 2rem;">🐚 내 프로필 설정 🐚</h2>
+        <div style="margin-top: 50px; width: 100%;">
+            <p style="color: var(--deep-pink); font-weight: bold;">이름을 입력해 주세요!</p>
+            <input type="text" id="name-input" class="profile-input" placeholder="이름을 입력하세요">
+            <br>
+            <button class="save-btn" onclick="saveProfile()">저장하기</button>
+        </div>
+    </div>
+
     <div class="tab-bar">
         <div class="tab-item active" id="tab-home" onclick="switchTab('home')">
             <span class="tab-icon">🏝️</span><span>공부방</span>
@@ -176,12 +189,39 @@
         <div class="tab-item" id="tab-calc" onclick="switchTab('calc')">
             <span class="tab-icon">☁️</span><span>구름계산기</span>
         </div>
+        <div class="tab-item" id="tab-profile" onclick="switchTab('profile')">
+            <span class="tab-icon">👤</span><span>프로필</span>
+        </div>
     </div>
 </div>
 
 <script>
     let curOp = '', curLv = 1, curAns = 0;
     let probIdx = 0, score = 0, cExpr = '';
+    let userName = localStorage.getItem('userName') || '소현';
+
+    // 초기 이름 설정
+    window.onload = function() {
+        updateNameUI();
+    };
+
+    function updateNameUI() {
+        document.getElementById('home-title').innerText = `🐳 ${userName}이의 숫자놀이 🐬`;
+        document.getElementById('name-input').value = userName;
+    }
+
+    function saveProfile() {
+        const inputName = document.getElementById('name-input').value.trim();
+        if(inputName) {
+            userName = inputName;
+            localStorage.setItem('userName', userName);
+            updateNameUI();
+            alert('이름이 저장되었습니다! 🎉');
+            switchTab('home');
+        } else {
+            alert('이름을 입력해 주세요!');
+        }
+    }
 
     // APK/오프라인용 소리 설정 (파일이 폴더 내에 있어야 함)
     // 없을 경우 에러로 앱이 멈추지 않도록 play() 시에 catch 처리 추가
@@ -198,14 +238,16 @@
     }
 
     function switchTab(type) {
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
         if(type === 'home') {
             switchView('home');
             document.getElementById('tab-home').classList.add('active');
-            document.getElementById('tab-calc').classList.remove('active');
-        } else {
+        } else if(type === 'calc') {
             switchView('calc');
-            document.getElementById('tab-home').classList.remove('active');
             document.getElementById('tab-calc').classList.add('active');
+        } else if(type === 'profile') {
+            switchView('profile');
+            document.getElementById('tab-profile').classList.add('active');
         }
     }
 
@@ -305,7 +347,7 @@
         if(score === 10) {
             title.innerText = "황금 훈장 획득!";
             icon.innerText = "🏅";
-            msg.innerText = "대단해 소현아! 머릿속이 바다처럼 넓고 깊어졌어! 🔱";
+            msg.innerText = `대단해 ${userName}아! 머릿속이 바다처럼 넓고 깊어졌어! 🔱`;
         } else if(score >= 7) {
             title.innerText = "무지개 보석 획득!";
             icon.innerText = "💎";
