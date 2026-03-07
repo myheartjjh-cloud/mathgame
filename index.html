@@ -198,7 +198,7 @@
 <script>
     let curOp = '', curLv = 1, curAns = 0;
     let probIdx = 0, score = 0, cExpr = '';
-    let userName = localStorage.getItem('userName') || '소현';
+    let userName = localStorage.getItem('userName') || '소현이';
 
     // 초기 이름 설정
     window.onload = function() {
@@ -206,7 +206,7 @@
     };
 
     function updateNameUI() {
-        document.getElementById('home-title').innerText = `🐳 ${userName}이의 숫자놀이 🐬`;
+        document.getElementById('home-title').innerText = `🐳 ${userName}의 숫자놀이 🐬`;
         document.getElementById('name-input').value = userName;
     }
 
